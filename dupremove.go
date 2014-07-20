@@ -69,7 +69,6 @@ func main() {
 func remove(f dup.FileName) error {
 	if *dryRun {
 		return nil
-	} else {
-		return os.Remove(string(f))
 	}
+	return os.Remove(string(f))
 }

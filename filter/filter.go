@@ -15,6 +15,9 @@ import (
 	"github.com/phst/dupremove/dup"
 )
 
+// RemovableFiles returns all files from the given duplicate file group that
+// can be removed under the condition that at least one file should remain and
+// the directories listed in keep should be left untouched.
 func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
 	keepCandidates := []dup.FileName{}
 	removeCandidates := []dup.FileName{}
@@ -34,7 +37,6 @@ func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
 	}
 	if len(removeCandidates) == 0 || len(keepCandidates) > 0 {
 		return removeCandidates
-	} else {
-		return removeCandidates[1:]
 	}
+	return removeCandidates[1:]
 }

@@ -10,6 +10,8 @@
 package dup
 
 type (
-	Group    []FileName
+	// Group denotes a set of files that are duplicates of each other.
+	Group []FileName
+	// FileName represents a file name of a duplicate file.
 	FileName string
 )

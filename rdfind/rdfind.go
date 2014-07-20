@@ -22,6 +22,8 @@ import (
 	"github.com/phst/dupremove/dup"
 )
 
+// Run executes the rdfind program with the given list of diretories, parses
+// its output, and returns a list of groups of duplicate files.
 func Run(dirs []string) ([]dup.Group, error) {
 	outf, err := ioutil.TempFile("", "rdfind")
 	if err != nil {
