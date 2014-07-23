@@ -42,8 +42,12 @@ func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
 			kept++
 		}
 	}
-	if len(candidates) == 0 || kept > 0 {
-		glog.V(2).Infof("all removal candidates can be removed")
+	if len(candidates) == 0 {
+		glog.V(2).Info("no candidates for removal")
+		return candidates
+	}
+	if kept > 0 {
+		glog.V(2).Infof("all removal candidates can be removed because %d files will be held back", kept)
 		return candidates
 	}
 	glog.V(2).Infof("file %s will be kept because it would be the only remaining file in current group", candidates[0])
