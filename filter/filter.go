@@ -22,8 +22,8 @@ import (
 // the directories listed in keep should be left untouched.
 func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
 	glog.V(2).Infof("searching duplicate group with %d files for candidates for removal", len(group))
-	keepCandidates := []dup.FileName{}
-	removeCandidates := []dup.FileName{}
+	kept := 0
+	candidates := []dup.FileName{}
 	for _, file := range group {
 		glog.V(3).Infof("testing whether %s can be removed", file)
 		remove := true
@@ -36,16 +36,16 @@ func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
 		}
 		if remove {
 			glog.V(3).Infof("file %s is a candidate for removal", file)
-			removeCandidates = append(removeCandidates, file)
+			candidates = append(candidates, file)
 		} else {
 			glog.V(3).Infof("file %s will be kept because it is precious", file)
-			keepCandidates = append(keepCandidates, file)
+			kept++
 		}
 	}
-	if len(removeCandidates) == 0 || len(keepCandidates) > 0 {
+	if len(candidates) == 0 || kept > 0 {
 		glog.V(2).Infof("all removal candidates can be removed")
-		return removeCandidates
+		return candidates
 	}
-	glog.V(2).Infof("file %s will be kept because it would be the only remaining file in current group", removeCandidates[0])
-	return removeCandidates[1:]
+	glog.V(2).Infof("file %s will be kept because it would be the only remaining file in current group", candidates[0])
+	return candidates[1:]
 }
