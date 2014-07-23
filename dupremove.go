@@ -52,11 +52,13 @@ func main() {
 	glog.Infof("found %d file groups", len(groups))
 
 	removed := 0
+	errors := 0
 	for _, group := range groups {
 		files := filter.RemovableFiles(group, keep)
 		for _, file := range files {
 			if err := remove(file); err != nil {
 				glog.Errorf("could not remove file %s: %s", file, err)
+				errors++
 			} else {
 				glog.V(1).Infof("removed file %s", file)
 				removed++
@@ -64,6 +66,10 @@ func main() {
 		}
 	}
 	glog.Infof("removed %d files", removed)
+	if errors > 0 {
+		glog.Errorf("could not remove %d files due to errors", errors)
+		os.Exit(1)
+	}
 }
 
 func remove(f dup.FileName) error {
