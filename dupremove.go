@@ -11,8 +11,9 @@ package main
 
 import (
 	"flag"
-	"log"
 	"os"
+
+	"github.com/golang/glog"
 
 	"github.com/phst/dupremove/dup"
 	"github.com/phst/dupremove/filter"
@@ -23,7 +24,6 @@ var dryRun = flag.Bool("n", false, "dry-run mode: don't remove any files")
 
 func main() {
 	flag.Parse()
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	keep := []string{}
 	dirs := []string{}
 	mode := ""
@@ -32,7 +32,7 @@ func main() {
 			mode = arg
 		} else {
 			if mode == "" {
-				log.Fatalf("command line arguments need to start with 'keep' or 'remove'")
+				glog.Fatalf("command line arguments need to start with 'keep' or 'remove'")
 			} else {
 				dirs = append(dirs, arg)
 				if mode == "keep" {
@@ -42,28 +42,28 @@ func main() {
 		}
 	}
 	if len(dirs) == 0 {
-		log.Fatalf("no directories specified")
+		glog.Fatalf("no directories specified")
 	}
 
 	groups, err := rdfind.Run(dirs)
 	if err != nil {
-		log.Fatalf("error running rdfind: %s", err)
+		glog.Fatalf("error running rdfind: %s", err)
 	}
-	log.Printf("found %d file groups", len(groups))
+	glog.Infof("found %d file groups", len(groups))
 
 	removed := 0
 	for _, group := range groups {
 		files := filter.RemovableFiles(group, keep)
 		for _, file := range files {
 			if err := remove(file); err != nil {
-				log.Printf("could not remove file %s: %s", file, err)
+				glog.Errorf("could not remove file %s: %s", file, err)
 			} else {
-				log.Printf("removed file %s", file)
+				glog.V(1).Infof("removed file %s", file)
 				removed++
 			}
 		}
 	}
-	log.Printf("removed %d files", removed)
+	glog.Infof("removed %d files", removed)
 }
 
 func remove(f dup.FileName) error {

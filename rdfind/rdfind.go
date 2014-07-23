@@ -14,10 +14,11 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/golang/glog"
 
 	"github.com/phst/dupremove/dup"
 )
@@ -31,7 +32,7 @@ func Run(dirs []string) ([]dup.Group, error) {
 	}
 	defer outf.Close()
 
-	log.Printf("running rdfind for %d directories %s", len(dirs), dirs)
+	glog.Infof("running rdfind for %d directories %s", len(dirs), dirs)
 	cmd := exec.Command("rdfind", "-outputname", outf.Name())
 	cmd.Args = append(cmd.Args, dirs...)
 	cmd.Stdin = os.Stdin
@@ -44,13 +45,13 @@ func Run(dirs []string) ([]dup.Group, error) {
 	if _, err := outf.Seek(0, 0); err != nil {
 		return nil, fmt.Errorf("error seeking in output file: %s", err)
 	}
-	log.Printf("parsing rdfind output from %s", outf.Name())
+	glog.Infof("parsing rdfind output from %s", outf.Name())
 	res, err := parse(outf)
 	if err != nil {
 		return nil, fmt.Errorf("error parsing rdfind output from %s: %s", outf.Name(), err)
 	}
 	if err := os.Remove(outf.Name()); err != nil {
-		log.Printf("error removing temporary file %s: %s", outf.Name(), err)
+		glog.Warningf("error removing temporary file %s: %s", outf.Name(), err)
 	}
 	return res, nil
 }
