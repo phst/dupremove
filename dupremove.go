@@ -32,7 +32,7 @@ func main() {
 			mode = arg
 		} else {
 			if mode == "" {
-				glog.Fatalf("command line arguments need to start with 'keep' or 'remove'")
+				glog.Fatal("command line arguments need to start with 'keep' or 'remove'")
 			} else {
 				dirs = append(dirs, arg)
 				if mode == "keep" {
@@ -42,7 +42,7 @@ func main() {
 		}
 	}
 	if len(dirs) == 0 {
-		glog.Fatalf("no directories specified")
+		glog.Fatal("no directories specified")
 	}
 
 	groups, err := rdfind.Run(dirs)
