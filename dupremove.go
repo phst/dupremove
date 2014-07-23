@@ -74,7 +74,9 @@ func main() {
 
 func remove(f dup.FileName) error {
 	if *dryRun {
+		glog.V(2).Infof("skipping file %s in dry-run mode", f)
 		return nil
 	}
+	glog.V(2).Infof("removing file %s", f)
 	return os.Remove(string(f))
 }

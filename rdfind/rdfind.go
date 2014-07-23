@@ -38,6 +38,7 @@ func Run(dirs []string) ([]dup.Group, error) {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	glog.V(1).Infof("running rdfind with arguments %v", cmd.Args)
 	if err := cmd.Run(); err != nil {
 		return nil, err
 	}
@@ -50,6 +51,7 @@ func Run(dirs []string) ([]dup.Group, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error parsing rdfind output from %s: %s", outf.Name(), err)
 	}
+	glog.V(1).Infof("removing temporary file %s", outf.Name())
 	if err := os.Remove(outf.Name()); err != nil {
 		glog.Warningf("error removing temporary file %s: %s", outf.Name(), err)
 	}
@@ -68,6 +70,7 @@ func parse(r io.Reader) ([]dup.Group, error) {
 	scanner := bufio.NewScanner(r)
 	for i := 0; scanner.Scan(); i++ {
 		s := scanner.Text()
+		glog.V(3).Infof("parsing line %d: %s", i+1, s)
 		if s == "" || strings.HasPrefix(s, "#") {
 			continue
 		}
@@ -82,10 +85,13 @@ func parse(r io.Reader) ([]dup.Group, error) {
 		name := dup.FileName(fields[7])
 		if duptype == first {
 			if group != nil {
+				glog.V(3).Infof("finishing group with %d files", len(group))
 				res = append(res, group)
 			}
+			glog.V(3).Info("starting new group")
 			group = dup.Group{name}
 		} else {
+			glog.V(4).Infof("appending file %s to current group", name)
 			group = append(group, name)
 		}
 	}
@@ -93,6 +99,7 @@ func parse(r io.Reader) ([]dup.Group, error) {
 		return nil, err
 	}
 	if group != nil {
+		glog.V(3).Infof("finishing last group with %d files", len(group))
 		res = append(res, group)
 	}
 	return res, nil

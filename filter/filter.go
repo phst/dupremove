@@ -12,6 +12,8 @@ package filter
 import (
 	"strings"
 
+	"github.com/golang/glog"
+
 	"github.com/phst/dupremove/dup"
 )
 
@@ -19,24 +21,31 @@ import (
 // can be removed under the condition that at least one file should remain and
 // the directories listed in keep should be left untouched.
 func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
+	glog.V(2).Infof("searching duplicate group with %d files for candidates for removal", len(group))
 	keepCandidates := []dup.FileName{}
 	removeCandidates := []dup.FileName{}
 	for _, file := range group {
+		glog.V(3).Infof("testing whether %s can be removed", file)
 		remove := true
 		for _, dir := range keep {
 			if strings.HasPrefix(string(file), dir) {
+				glog.V(2).Infof("file %s cannot be removed because it is in precious directory %s", file, dir)
 				remove = false
 				break
 			}
 		}
 		if remove {
+			glog.V(3).Infof("file %s is a candidate for removal", file)
 			removeCandidates = append(removeCandidates, file)
 		} else {
+			glog.V(3).Infof("file %s will be kept because it is precious", file)
 			keepCandidates = append(keepCandidates, file)
 		}
 	}
 	if len(removeCandidates) == 0 || len(keepCandidates) > 0 {
+		glog.V(2).Infof("all removal candidates can be removed")
 		return removeCandidates
 	}
+	glog.V(2).Infof("file %s will be kept because it would be the only remaining file in current group", removeCandidates[0])
 	return removeCandidates[1:]
 }
