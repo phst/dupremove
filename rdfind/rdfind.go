@@ -1,4 +1,4 @@
-// Copyright 2014 Philipp Stephani <phst@google.com>
+// Copyright 2014, 2025 Philipp Stephani <phst@google.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License.  You may obtain a copy
@@ -18,7 +18,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -31,7 +30,7 @@ import (
 // Run executes the rdfind program with the given list of diretories, parses
 // its output, and returns a list of groups of duplicate files.
 func Run(dirs []string) ([]dup.Group, error) {
-	outf, err := ioutil.TempFile("", "rdfind")
+	outf, err := os.CreateTemp("", "rdfind")
 	if err != nil {
 		return nil, fmt.Errorf("error creating temporary file for output: %s", err)
 	}
