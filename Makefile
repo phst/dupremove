@@ -18,7 +18,6 @@
 SHELL = /bin/sh
 
 GO = go
-STATICCHECK = staticcheck
 
 all:
 	$(GO) build ./...
@@ -26,7 +25,7 @@ all:
 check: all
 	$(GO) test ./...
 	$(GO) vet ./...
-	$(STATICCHECK) ./...
+	$(GO) tool honnef.co/go/tools/cmd/staticcheck ./...
 
 install:
 	$(GO) install
