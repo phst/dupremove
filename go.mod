@@ -16,7 +16,7 @@ module github.com/phst/dupremove
 
 go 1.24.1
 
-require github.com/golang/glog v1.2.4
+require github.com/golang/glog v1.2.5
 
 require (
 	github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c // indirect
