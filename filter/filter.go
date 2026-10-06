@@ -1,4 +1,4 @@
-// Copyright 2014 Philipp Stephani <phst@google.com>
+// Copyright 2014, 2026 Philipp Stephani <phst@google.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License.  You may obtain a copy
@@ -33,7 +33,7 @@ func RemovableFiles(group dup.Group, keep []string) []dup.FileName {
 		glog.V(3).Infof("testing whether %s can be removed", file)
 		remove := true
 		for _, dir := range keep {
-			if strings.HasPrefix(string(file), dir) {
+			if strings.HasPrefix(string(file), dir+"/") {
 				glog.V(2).Infof("file %s cannot be removed because it is in precious directory %s", file, dir)
 				remove = false
 				break

@@ -1,4 +1,4 @@
-// Copyright 2014 Philipp Stephani <phst@google.com>
+// Copyright 2014, 2026 Philipp Stephani <phst@google.com>
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not
 // use this file except in compliance with the License.  You may obtain a copy
@@ -27,8 +27,8 @@ func TestRemovableFiles(t *testing.T) {
 		want  []dup.FileName
 	}{
 		{
-			input: dup.Group{"/a/b", "/a/c", "/b/d"},
-			want:  []dup.FileName{"/b/d"},
+			input: dup.Group{"/a/b", "/a/c", "/b/d", "/ax"},
+			want:  []dup.FileName{"/b/d", "/ax"},
 		}, {
 			input: dup.Group{},
 			want:  []dup.FileName{},
